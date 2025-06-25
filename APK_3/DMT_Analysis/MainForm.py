@@ -293,7 +293,8 @@ class Ui_MainForm(object):
         self.Canvas.repaint()
         
     def openFile(self):
-        """Open point cloud file and load QPoint3D data"""
+        """Open point cloud file and load QPoint3D data
+        function was created with the help of artificial intelligence"""
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(
             None, "Open Point Cloud File", "", "Supported Files (*.txt *.las *.laz);;Text Files (*.txt);;LAS Files (*.las *.laz)")
         
