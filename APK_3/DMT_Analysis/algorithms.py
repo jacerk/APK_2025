@@ -2,7 +2,6 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 from math import *
-
 from qpoint3df import *
 from edge import *
 from triangle import *

@@ -10,68 +10,38 @@ class Algorithms:
     def __init__(self): #
         pass
 
-    def ray_crossing_pols(self, q: QPointF, polygons):
-        '''
-        q: QPointF
-        polygons: list of tuples (QPolygonF, attributes)
-        Returns list of results for each polygon, list of containing polygons and results corresponding to those polygons
-        '''
+    def analyze_point_in_polygons(self, q: QPointF, polygons, method: str):
         if not polygons:
             return [], []
-            
-        results = [] # list of results for each polygon
-        containing_polygons = [] # list of containing polygons
-        on_edge_polygons = []   # list of polygons where point is on edge
-        
-        for i, (pol, attributes) in enumerate(polygons): # iterate through each polygon
-            status = self.ray_crossing(q, pol)
-            results.append(status)
-            
-            if status == 1:
-                containing_polygons.append(attributes)
-            elif status == -1:
-                on_edge_polygons.append(attributes)
-                
-        combined_result = 0
-        if 1 in results:
-            combined_result = 1
-        elif -1 in results:
-            combined_result = -1
-            
-        final_results = [combined_result] + results
-        
-        if combined_result == 1:
-            return final_results, containing_polygons
-        elif combined_result == -1:
-            return final_results, on_edge_polygons
-        else:
-            return final_results, []
 
-    def winding_number_pols(self, q: QPointF, polygons):
-        if not polygons:
-            return [], []
-            
         results = []
         containing_polygons = []
         on_edge_polygons = []
-        
-        for i, (pol, attributes) in enumerate(polygons):
-            status = self.winding_number(q, pol)
+
+        for pol, attributes in polygons:
+            if method == "ray_crossing":
+                status = self.ray_crossing(q, pol)
+            elif method == "winding_number":
+                status = self.winding_number(q, pol)
+            else:
+                # Invalid method, return empty results
+                return [], []
+
             results.append(status)
-            
+
             if status == 1:
                 containing_polygons.append(attributes)
             elif status == -1:
                 on_edge_polygons.append(attributes)
-                
+
         combined_result = 0
         if 1 in results:
             combined_result = 1
         elif -1 in results:
             combined_result = -1
-            
+
         final_results = [combined_result] + results
-        
+
         if combined_result == 1:
             return final_results, containing_polygons
         elif combined_result == -1:
@@ -171,12 +141,3 @@ class Algorithms:
             return 1
         
         return 0
-
-
-
-
-
-
-
-
-
