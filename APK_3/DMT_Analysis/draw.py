@@ -5,7 +5,7 @@ from qpoint3df import *
 from edge import *
 from triangle import *
 from math import *
-
+ 
 class Draw(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
