@@ -342,11 +342,25 @@ class Algorithms:
             print(f"Error in getArea: {str(e)}")
             return 0.0
     
-    def distance_points(self, point1, point2):
-        """Calculate Euclidean distance between two points"""
-        x1, y1 = point1
-        x2, y2 = point2
-        return sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    def calculateDistance(self, p1: QPointF, p2: QPointF):
+        return sqrt((p1.x()-p2.x())**2+(p1.y()-p2.y())**2)
+
+    def get_point_location(self, p: QPointF, p1: QPointF, p2: QPointF):
+        #Analyze position of point p towards line p1p2
+        #return 1 for left, 0 for on, -1 for right
+        eps = 1.0e-6
+        #Vector product
+        ux = p2.x() - p1.x()
+        uy = p2.y() - p1.y()
+        vx = p.x() - p1.x()
+        vy = p.y() - p1.y()
+        t = ux*vy - uy*vx
+        #Point location
+        if t > eps:
+            return 1
+        if t < -eps:
+            return -1
+        return 0
         
     def resizeRectangle(self, building:QPolygonF, mbr:QPolygonF):
         # Resizing rectangle to match the building area
@@ -573,73 +587,69 @@ class Algorithms:
         res = self.resizeRectangle(pol, er)
         return res, angle_ave # Return polygon and average angle
 
-    # get simplified building using Weighted Bisector algorithm (Using 2 longest diagonals, ignoring intersections)
-    def weighted_bisector(self, pol: QPolygonF):
-        """
-        Weighted bisector with all diagonals
-        Simplify building using a weighted bisector approach based on the
-        two longest diagonals, regardless of whether they intersect.
-        """
-
-
-        avg_angle = 0.0 # Default angle
-
-        try:
-            # Initialize list for all diagonals 
-            all_diagonals_data = []
-            n = len(pol)
-
-            # find diagonals
-            for i in range(n):
-                for j in range(i + 2, n):
-                    # Skip adjacent vertices and the wrap-around case i=0, j=n-1
-                    if j == (i + 1) % n or i == (j + 1) % n:
-                        continue
-                    if i == 0 and j == n - 1:
-                        continue
-
-                    p1 = pol[i]
-                    p2 = pol[j]
-
-                    # Calculate length and add directly
-                    dx = p2.x() - p1.x()
-                    dy = p2.y() - p1.y()
-                    length_sq = dx * dx + dy * dy
-                    all_diagonals_data.append((p1, p2, length_sq)) # Add diagonal data
-
-            # Sort by length squared (descending)
-            all_diagonals_data.sort(key=lambda item: item[2], reverse=True)
-
-            # Select top 1 or 2 diagonals
-            diagonals_to_use = all_diagonals_data[:2] # Take up to the first two
-
-            # itialize sum vectors
-            sum_vector_x = 0.0
-            sum_vector_y = 0.0
-
-            for d_p1, d_p2, d_length_sq in diagonals_to_use:
-                dx = d_p2.x() - d_p1.x()
-                dy = d_p2.y() - d_p1.y()
-                length = sqrt(d_length_sq)
-                if length < 1e-9: continue
-
-                angle = atan2(dy, dx)
-                sum_vector_x += length * cos(angle) # Weight by length
-                sum_vector_y += length * sin(angle) # Weight by length
-
+    def weighted_bisector(self,building:QPolygonF):
+        n = len(building)
         
-            avg_angle = (sum_vector_x + sum_vector_y)/2
+        # Diagonal doesn't exist
+        if n < 4:
+            return QPolygonF()
 
-            # Create and resize bounding box
-            pol_r = self.rotate(pol, -avg_angle)
-            mmb, area = self.createMMB(pol_r)
-            er = self.rotate(mmb, avg_angle)
-            res_pol = self.resizeRectangle(pol, er)
-
-            return res_pol, avg_angle
-
-        except Exception as e:
-            print(f"Error in weighted_bisector: {str(e)}")
+        potential_diagonals = {}
+        
+        # Find all diagonals and calculate their length
+        for i in range (n-1):
+            for j in range ((i+1),n):
+                if abs(i-j) <= 1 or abs(i-j) > n-2:
+                    continue
+                
+                a, b = building[i], building[j]
+                diag_id = ((a.x(), a.y()), (b.x(), b.y()))
+                
+                length = self.calculateDistance(a,b)
+                potential_diagonals[diag_id] = length
+                
+        # Sort diagonald by length        
+        sorted_diagonals = dict(sorted(potential_diagonals.items(), key=lambda item: item[1], reverse=True))
+        two_diag_len = []
+        two_diag_dir = []
+        
+        # Check for intersections of edges and diagonals using half-plane tests, starting with longest diagonals
+        for (a_coords, b_coords), length in sorted_diagonals.items():
+            a, b = QPointF(*a_coords), QPointF(*b_coords)
+            
+            for i in range(n):
+                c = building[i]
+                d = building[(i+1)%n]
+                
+                # Half-plane tests
+                ta = self.get_point_location(a,c,d)
+                tb = self.get_point_location(b,c,d)
+                tc = self.get_point_location(c,a,b)
+                td = self.get_point_location(d,a,b)
+                
+                # Check for valid (non-intersecting) diagonals
+                if ta == tb or tc == td or a == c or a == d or b == c or b == d:
+                    if i == n-1:
+                        dx = b.x() - a.x()
+                        dy = b.y() - a.y()
+                        
+                        sigma0 = atan2(dy,dx)
+                        
+                        two_diag_len.append(length)
+                        two_diag_dir.append(sigma0)
+                        
+                        # After finding two valid diagonals, find sigma and finish simplificaction
+                        if len(two_diag_len) == 2:
+                            sigma = (two_diag_len[0]*two_diag_dir[0]+two_diag_len[1]*two_diag_dir[1])/sum(two_diag_len)
+                            rot = self.rotate(building,-sigma)
+                            mmb, _ = self.createMMB(rot)
+                            mmb_rot = self.rotate(mmb,sigma)
+                            mmb_res = self.resizeRectangle(building,mmb_rot)
+                            return mmb_res,sigma
+                    else:    
+                        continue
+                else:
+                    break
 
 
     def createBRPCA(self, building: QPolygonF):
