@@ -628,7 +628,7 @@ class Algorithms:
                 sum_vector_y += length * sin(angle) # Weight by length
 
         
-            avg_angle = atan2(sum_vector_y, sum_vector_x)
+            avg_angle = angle
 
             # Create and resize bounding box
             pol_r = self.rotate(pol, -avg_angle)
