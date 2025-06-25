@@ -13,9 +13,9 @@ class Ui_Settings(object):
     
     def __init__(self):
         #Parameters of contour lines
-        self.zmin = 150 
-        self.zmax = 2000
-        self.dz = 10
+        self.zmin = 0
+        self.zmax = 0
+        self.dz = 0
         self.scale = 1.0
         self.xmin = 0.0
         self.ymin = 0.0
@@ -72,16 +72,12 @@ class Ui_Settings(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
-
+ 
         self.retranslateUi(Settings)
         self.buttonBox.accepted.connect(Settings.accept) # type: ignore
         self.buttonBox.rejected.connect(Settings.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Settings)
         
-        #Settins: show initial values
-        self.spinBox.setValue(self.zmin)
-        self.spinBox_2.setValue(self.zmax)
-        self.spinBox_3.setValue(self.dz)
 
 
     def retranslateUi(self, Settings):

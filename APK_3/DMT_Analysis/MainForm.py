@@ -220,11 +220,24 @@ class Ui_MainForm(object):
     
     def settingsClick(self):
         """Show and apply settings"""
-        self.dialog.exec()
-        self.zmin = self.ui_dialog.getZmin()
-        self.zmax = self.ui_dialog.getZmax()
-        self.dz = self.ui_dialog.getdZ()
-        self.statusbar.showMessage(f"Updated parameters: zmin={self.zmin}, zmax={self.zmax}, dz={self.dz}", 5000)
+        #Set initial values
+        self.ui_dialog.spinBox.setValue(self.zmin)
+        self.ui_dialog.spinBox_2.setValue(self.zmax)
+        self.ui_dialog.spinBox_3.setValue(self.dz)
+        
+        #Show dialog
+        if self.dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
+            #Update parameters
+            self.zmin = self.ui_dialog.getZmin()
+            self.zmax = self.ui_dialog.getZmax()
+            self.dz = self.ui_dialog.getdZ()
+            
+            #Update status bar
+            self.statusbar.showMessage(f"Updated parameters: zmin={self.zmin}, zmax={self.zmax}, dz={self.dz}", 5000)
+            
+            #Re-compute contour lines if they exist
+            if self.Canvas.getContourLines():
+                self.contourLinesClick()
         
     
     def analyzeSlopeClick(self):

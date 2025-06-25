@@ -155,6 +155,9 @@ class Draw(QWidget):
     def getTriangles(self):
         return self.triangles
         
+    def getContourLines(self):
+        return self.contour_lines
+        
     def setDT(self, dt_):
         self.dt = dt_
         
