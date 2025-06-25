@@ -1,0 +1,60 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.34.15-Prizren">
+  <identifier>TMBUDOVA_P</identifier>
+  <parentidentifier></parentidentifier>
+  <language>CZE</language>
+  <type>dataset</type>
+  <title>Digitální technická mapa Prahy - plochy (polygony) budov</title>
+  <abstract>DTMP - TM - budovy. Plochy (polygony) budov Technické mapy
+
+</abstract>
+  <keywords vocabulary="Search keys">
+    <keyword>budovy</keyword>
+    <keyword>DTMP</keyword>
+    <keyword>TM</keyword>
+    <keyword>Praha</keyword>
+  </keywords>
+  <contact>
+    <contactAddress>
+      <type></type>
+      <address>Vyšehradská 57/2077</address>
+      <city>Praha</city>
+      <administrativearea></administrativearea>
+      <postalcode>12800</postalcode>
+      <country></country>
+    </contactAddress>
+    <name>Vojtěch Hříbal</name>
+    <organization>Institut plánování a rozvoje hl. m. Prahy</organization>
+    <position></position>
+    <voice></voice>
+    <fax></fax>
+    <email>hribal@ipr.praha.eu</email>
+    <role>Point of contact</role>
+  </contact>
+  <links/>
+  <history>Datová sada spravovaná a aktualizovaná na základě zřizovací listiny Institutu plánování a rozvoje hl. m. Prahy. </history>
+  <dates>
+    <date value="2008-04-01T00:00:00" type="Created"/>
+    <date value="2024-04-01T00:00:00" type="Revised"/>
+  </dates>
+  <fees></fees>
+  <constraints type="Limitations of use">www.geoportalpraha.cz</constraints>
+  <license></license>
+  <encoding></encoding>
+  <crs>
+    <spatialrefsys nativeFormat="Wkt">
+      <wkt></wkt>
+      <proj4>+proj=krovak +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=589,76,480,0,0,0,0 +units=m +no_defs</proj4>
+      <srsid>0</srsid>
+      <srid>0</srid>
+      <authid></authid>
+      <description></description>
+      <projectionacronym></projectionacronym>
+      <ellipsoidacronym></ellipsoidacronym>
+      <geographicflag>false</geographicflag>
+    </spatialrefsys>
+  </crs>
+  <extent>
+    <spatial maxy="50.19112499999999955" miny="49.9324579999999969" crs="EPSG:4326" maxz="0" minx="14.21679800000000071" maxx="14.72607400000000055" dimensions="2" minz="0"/>
+  </extent>
+</qgis>
