@@ -36,7 +36,8 @@ class Draw(QWidget):
         self.setMouseTracking(True) 
         
     def loadData(self, filename=None):   
-        '''this function loads the data from a shapefile using GeoPandas and returns them in GeoDataFrame'''
+        '''this function loads the data from a shapefile using GeoPandas and returns them in GeoDataFrame
+        function was developed with the help of AI, but was modified by the author'''
         if not filename:
             filename, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Shapefile (*.shp);;GeoJSON (*.geojson);;All files (*.*)")
         
@@ -228,7 +229,8 @@ class Draw(QWidget):
     def wheelEvent(self, e: QWheelEvent):
         '''
         Handle mouse wheel events for zooming in and out.
-        The zoom factor is adjusted based on the wheel rotation.
+        The zoom factor is adjusted based on the wheel rotation. 
+        This feature was developed with the help of AI, but was modified by the author
         '''
         angle_delta = e.angleDelta().y()
         if angle_delta > 0:

@@ -125,6 +125,7 @@ class Ui_MainWindow(object):
         self.statusbar.showMessage("Data cleared", 3000)
 
     def _display_analysis_result(self, result_value, containing_polygon, algorithm_name):
+        # Display analysis and results windows were developed with the use of Ai
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle(f'Result of analysis ({algorithm_name})')
 
